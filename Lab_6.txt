@@ -1,0 +1,28 @@
+1)SELECT title, price, production FROM main_table INNER JOIN production ON id_prod = id_production
+2)SELECT title, category FROM main_table INNER JOIN category ON id_category = id_cat
+3) a)SELECT title, price, production, format FROM main_table LEFT JOIN production  ON id_production = id_prod
+b)SELECT title, price, production, format FROM main_table INNER JOIN production  ON id_production = id_prod
+c)SELECT title, price, production, format FROM production RIGHT JOIN main_table  ON id_production = id_prod
+5) a)SELECT title, production, dates FROM main_table INNER JOIN production ON id_production = id_prod WHERE production = 'BHV С.-Петербург' AND YEAR(dates)>=2000
+b)SELECT title, production, dates FROM main_table FULL JOIN production ON id_production = id_prod WHERE production = 'BHV С.-Петербург' AND YEAR(dates)>=2000
+c)SELECT title, production, dates FROM main_table RIGHT JOIN production ON id_production = id_prod WHERE production = 'BHV С.-Петербург' AND YEAR(dates)>=2000
+d)SELECT title, production, dates FROM production LEFT JOIN main_table ON id_production = id_prod WHERE production = 'BHV С.-Петербург' AND YEAR(dates)>=2000
+6)a)SELECT title, category, SUM(pages) FROM main_table INNER JOIN category ON id_cat=id_category GROUP BY category ORDER BY category
+b)SELECT title, category, SUM(pages) FROM main_table FULL JOIN category ON id_cat=id_category GROUP BY category ORDER BY category
+7)SELECT title, category, topic, AVG(price) FROM main_table, category,topic WHERE id_category = 5 AND id_top = 1 AND category.id_cat= main_table.id_category AND main_table.id_topic=topic.id_top
+8)SELECT id, codes, title, price, production, pages, format, dates, counts, topic, category FROM main_table, category,topic, production WHERE category.id_cat= main_table.id_category AND main_table.id_topic=topic.id_top AND main_table.id_production = production.id_prod GROUP BY id ORDER BY id
+9)SELECT id, codes, title, price, production, pages, format, dates, counts, topic, category FROM main_table INNER JOIN category INNER JOIN topic INNER JOIN production WHERE category.id_cat= main_table.id_category AND main_table.id_topic=topic.id_top AND main_table.id_production = production.id_prod GROUP BY id ORDER BY id
+10)-
+11)-
+12)-
+13)SELECT * FROM main_table  WHERE id_category IN (SELECT id_cat FROM category WHERE category LIKE "Підручники")
+14)SELECT * FROM main_table  WHERE (id_production IN (SELECT id_prod FROM production  WHERE production = "BHV С.-Петербург")) AND (YEAR(dates) < 2000)
+15)SELECT * FROM production WHERE (SELECT MAX(pages) FROM main_table WHERE id_production = id_prod) > 400
+16)SELECT * FROM production WHERE (SELECT COUNT(id) FROM main_table WHERE id_production = id_prod) > 3
+17)SELECT * FROM main_table WHERE EXISTS (SELECT * FROM production WHERE production = "BHV С.-Петербург" AND id_production = id_prod)
+18)SELECT * FROM main_table WHERE NOT EXISTS (SELECT * FROM production WHERE production = "BHV С.-Петербург" AND id_production = id_prod)
+19)(SELECT * FROM category ORDER BY category) UNION (SELECT * FROM topic ORDER BY topic)
+20)(ALFA)(SELECT id,LEFT(title,(LOCATE(' ',title)-1)) FROM main_table ORDER BY id)
+UNION
+(SELECT id_cat,LEFT(category,(LOCATE(IF(category LIKE '% %',' ',RIGHT(category,1)),category))) FROM category ORDER BY category)
+(ON going)
