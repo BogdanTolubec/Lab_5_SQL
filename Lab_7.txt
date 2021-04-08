@@ -1,0 +1,44 @@
+1)CREATE PROCEDURE proc1()
+SELECT id,title,price,production,format FROM main_table INNER JOIN production WHERE id_production = id_prod ORDER BY id
+CALL proc1
+2)CREATE PROCEDURE proc2()
+SELECT id,title,topic,production,category FROM main_table INNER JOIN production INER JOIN topic INNER JOIN category WHERE id_production = id_prod AND id_topic = id_top AND id_category = id_cat ORDER BY topic
+CALL proc2
+3)CREATE PROCEDURE proc3(IN prod VARCHAR(100), year_1 INT)
+SELECT title, production, dates FROM main_table INNER JOIN production ON id_production = id_prod WHERE production LIKE prod AND YEAR(dates)>=year_1
+CALL proc3('BHV С.-Петербург',2000)
+4)CREATE PROCEDURE proc4(IN cat VARCHAR(50))
+SELECT title, category, SUM(pages) FROM main_table INNER JOIN category ON id_cat=id_category WHERE category LIKE cat
+CALL proc4('Підручники')
+5)CREATE PROCEDURE proc5(IN cat VARCHAR(50), top VARCHAR(0))
+SELECT title, category, topic, AVG(price) FROM main_table, category,topic WHERE category = cat AND topic = top AND category.id_cat= main_table.id_category AND main_table.id_topic=topic.id_top
+CALL proc5('Підручники','Використання ПК в цілому')
+6)CREATE PROCEDURE proc6()
+SELECT id,codes,new,title,price,production.production,pages,format,dates,counts,topic.topic,category.category FROM (main_table, category,production,topic) WHERE id_production=id_prod AND id_category=id_cat AND id_topic=id_top ORDER BY id
+CALL proc6()
+7-8)CREATE PROCEDURE proc7()
+SELECT * FROM main_table WHERE pages IN (SELECT pages FROM main_table GROUP BY pages HAVING COUNT(*) > (2-3))ORDER BY pages
+CALL proc7()
+9)CREATE PROCEDURE proc9()
+SELECT * FROM main_table INNER JOIN category WHERE category LIKE 'Захист і безпека ПК' AND id_category = id_cat GROUP BY id ORDER BY id
+CALL proc9()
+10)CREATE PROCEDURE proc10(IN num_pages INT)
+SELECT * FROM production WHERE (SELECT MAX(pages) FROM main_table WHERE id_production = id_prod) > num_pages
+CALL proc10(400)
+11)CREATE PROCEDURE proc11(IN num_prod INT)
+SELECT * FROM production WHERE (SELECT COUNT(id) FROM main_table WHERE id_production = id_prod) > num_prod
+CALL proc11(3)
+12)CREATE PROCEDURE proc12()
+SELECT * FROM main_table WHERE EXISTS (SELECT * FROM production WHERE production = "BHV С.-Петербург" AND id_production = id_prod)
+CALL proc12()
+13)CREATE PROCEDURE proc13()
+SELECT * FROM main_table WHERE NOT EXISTS (SELECT * FROM production WHERE production = "BHV С.-Петербург" AND id_production = id_prod)
+CALL proc13()
+14)CREATE PROCEDURE proc14()
+(SELECT * FROM category ORDER BY category) UNION (SELECT * FROM topic ORDER BY topic)
+CALL proc14()
+15)CREATE PROCEDURE proc15()
+(SELECT id,LEFT(title,(LOCATE(' ',title)-1)) FROM main_table ORDER BY id)
+UNION
+(SELECT id_cat,LEFT(category,(LOCATE(IF(category LIKE '% %',' ',RIGHT(category,1)),category))) FROM category ORDER BY category)
+CALL proc15()
